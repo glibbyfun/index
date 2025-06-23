@@ -2,7 +2,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Hack 2077</title>
+  <title>Hack Wallet Simulator</title>
   <style>
     body {
       background-color: #000;
@@ -36,8 +36,8 @@
 </head>
 <body>
   <div class="container">
-    <h2>Hack 2077</h2>
-    <p>Pilih akun yang ingin "di-hack":</p>
+    <h2>Hack Wallet Simulator</h2>
+    <p>Pilih chain yang ingin "di-hack":</p>
     <select id="platform">
       <option>Ethereum</option>
       <option>Bitcoin</option>
@@ -55,6 +55,28 @@
       return new Promise(resolve => setTimeout(resolve, ms));
     }
 
+    function randomHex(length) {
+      const chars = 'abcdef0123456789';
+      return Array.from({ length }, () => chars[Math.floor(Math.random() * chars.length)]).join('');
+    }
+
+    function randomBase58(length) {
+      const chars = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
+      return Array.from({ length }, () => chars[Math.floor(Math.random() * chars.length)]).join('');
+    }
+
+    function randomAlphanumeric(length) {
+      const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+      return Array.from({ length }, () => chars[Math.floor(Math.random() * chars.length)]).join('');
+    }
+
+    function generateSeed(wordsCount = 12) {
+      const words = ["apple", "bamboo", "coffee", "sunset", "rocket", "dolphin", "idea", "goat",
+        "toilet", "moon", "river", "pizza", "storm", "dust", "metal", "future",
+        "signal", "planet", "energy", "monkey", "crypto", "wallet", "cat", "zero"];
+      return Array.from({ length: wordsCount }, () => words[Math.floor(Math.random() * words.length)]).join(' ');
+    }
+
     async function startHack() {
       const platform = document.getElementById('platform').value;
       const target = document.getElementById('target').value.trim();
@@ -66,47 +88,89 @@
         return;
       }
 
+      let fakeAddress, fakeKey, fakeSeed, fakeTxid;
+      switch (platform) {
+        case "Ethereum":
+          fakeAddress = '0x' + randomHex(40);
+          fakeKey = '0x' + randomHex(64);
+          fakeSeed = generateSeed(12);
+          fakeTxid = '0x' + randomHex(64);
+          break;
+        case "Bitcoin":
+          fakeAddress = '1' + randomBase58(33);
+          fakeKey = randomHex(64);
+          fakeSeed = generateSeed(12);
+          fakeTxid = randomHex(64);
+          break;
+        case "Solana":
+          fakeAddress = randomBase58(44);
+          fakeKey = randomBase58(64);
+          fakeSeed = generateSeed(12);
+          fakeTxid = randomBase58(88);
+          break;
+        case "Cardano":
+          fakeAddress = 'addr1' + randomBase58(50);
+          fakeKey = randomHex(64);
+          fakeSeed = generateSeed(24);
+          fakeTxid = randomHex(64);
+          break;
+        case "Ripple (XRP)":
+          fakeAddress = 'r' + randomBase58(33);
+          fakeKey = randomBase58(30);
+          fakeSeed = generateSeed(12);
+          fakeTxid = randomAlphanumeric(64);
+          break;
+        case "Cosmos (ATOM)":
+          fakeAddress = 'cosmos1' + randomBase58(38);
+          fakeKey = randomHex(64);
+          fakeSeed = generateSeed(12);
+          fakeTxid = randomHex(64);
+          break;
+        default:
+          fakeAddress = 'unknown';
+          fakeKey = 'none';
+          fakeSeed = 'none';
+          fakeTxid = 'none';
+      }
+
+      const fakeBalance = '$' + (Math.floor(Math.random() * 900_000_000) + 100_000).toLocaleString('en-US') + '.00';
+
       const lines = [
-  `Target wallet: ${target} (${platform})`,
-  "Memulai koneksi ke blockchain node...",
-  "Menjalankan tracing smart contract...",
-  "Node sinkronisasi selesai.",
-  "Menghubungkan ke node RPC...",
-  "Bypass autentikasi wallet...",
-  "Scanning metadata token...",
-  "Mencari celah smart contract...",
-  "Celan terdeteksi: overflow vulnerability",
-  "Mengeksekusi exploit...",
-  "Payload berhasil dikirim...",
-  "Mengakses file wallet via backdoor...",
-  "Private key ditemukan!",
-  "Key: 0xDEADBEEFCAFEBABE0123456789ABCDEF1234567890ABCDEFDEADBEEFDEADBEEF",
-  "Seed Phrase: pizza velvet dove monkey rocket bamboo sunset idea goat toilet coffee wing",
-  "Menyalin file wallet.dat...",
-  "Wallet balance: $420,690,000.00",
-  "Mengirim ke wallet kamu...",
-  "TXID: 0xabcdef1234567890deadbeef987654321",
-  "[ERROR] Transaksi diblokir oleh sistem etika universal.",
-  "Mencoba bypass spiritual...",
-  "Gagal. Kamu terlalu serakah bro 😭"
-];
+        `Target wallet: ${target} (${platform})`,
+        `Mendeteksi wallet: ${fakeAddress}`,
+        "Memulai koneksi ke blockchain node...",
+        "Node sinkronisasi selesai.",
+        "Menghubungkan ke node RPC...",
+        "Menelusuri celah keamanan...",
+        "Exploit berhasil dijalankan!",
+        "Private key ditemukan:",
+        fakeKey,
+        "Seed Phrase:",
+        fakeSeed,
+        "Menyalin file wallet...",
+        `Saldo wallet: ${fakeBalance}`,
+        "Mengirim ke wallet kamu...",
+        `TXID: ${fakeTxid}`,
+        "[ERROR] Transaksi diblokir oleh sistem etika universal.",
+        "Gagal. Kamu terlalu serakah bro 😭"
+      ];
 
       for (let i = 0; i < lines.length; i++) {
         consoleEl.innerHTML += lines[i] + "\n";
         consoleEl.scrollTop = consoleEl.scrollHeight;
-        await sleep(800);
+        await sleep(600);
       }
 
       const pranks = [
-        `Private Key Palsu: 0xTHISISNOTAREALKEYYOULOOSER 😹`,
-        `Seed Phrase: you are being trolled by a fake dApp`,
         `Note: Semua ini hanya prank, hidupmu masih aman! 😅`,
-        `Hasil: Dompetmu gak bisa hack, tapi bisa diisi kerja keras 💪`
+        `Hasil: Dompet gak bisa di-hack, tapi bisa diisi kerja keras 💪`,
+        `Pesan: Kamu terlalu berharap dari dunia gelap 😈`,
+        `Peringatan: Jangan coba ini di dunia nyata, bro 🚫`
       ];
 
       const joke = pranks[Math.floor(Math.random() * pranks.length)];
       consoleEl.innerHTML += joke + "\n";
-      consoleEl.innerHTML += "\nPRANK! Gagal nge-hack. Tapi kamu berhasil membuka... HARAPAN HIDUP YANG NYATA ❤️";
+      consoleEl.innerHTML += "\nPRANK BERHASIL ✅ Kamu kena tipu visual elite hacker 🤭";
       consoleEl.scrollTop = consoleEl.scrollHeight;
     }
   </script></body>
