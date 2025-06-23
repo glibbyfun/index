@@ -1,0 +1,98 @@
+<!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hack Simulator 2077</title>
+  <style>
+    body {
+      background-color: #000;
+      color: #0f0;
+      font-family: monospace;
+      padding: 20px;
+    }
+    .container {
+      max-width: 600px;
+      margin: auto;
+    }
+    select, input, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      font-size: 16px;
+      background: #111;
+      color: #0f0;
+      border: 1px solid #0f0;
+    }
+    #console {
+      background: #111;
+      padding: 10px;
+      margin-top: 20px;
+      height: 300px;
+      overflow-y: auto;
+      white-space: pre-wrap;
+      border: 1px solid #0f0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Hack Simulator 2077</h2>
+    <p>Pilih akun yang ingin "di-hack":</p>
+    <select id="platform">
+      <option>Facebook</option>
+      <option>Instagram</option>
+      <option>YouTube</option>
+      <option>Twitter</option>
+      <option>WhatsApp</option>
+      <option>Telegram</option>
+    </select><input type="text" id="target" placeholder="Masukkan username target">
+<button onclick="startHack()">Hack Sekarang</button>
+
+<div id="console"></div>
+
+  </div>  <script>
+    function sleep(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    async function startHack() {
+      const platform = document.getElementById('platform').value;
+      const target = document.getElementById('target').value.trim();
+      const consoleEl = document.getElementById('console');
+      consoleEl.innerHTML = "";
+
+      if (!target) {
+        alert("Masukkan username dulu dong 🙃");
+        return;
+      }
+
+      const lines = [
+        `Target: ${platform} akun milik ${target}`,
+        "Menghubungkan ke server...",
+        "Bypassing firewall...",
+        "Mengakses database rahasia...",
+        "Menyalin kredensial...",
+        "Dekripsi password...",
+        "Hack selesai. Menampilkan hasil:"
+      ];
+
+      for (let i = 0; i < lines.length; i++) {
+        consoleEl.innerHTML += lines[i] + "\n";
+        consoleEl.scrollTop = consoleEl.scrollHeight;
+        await sleep(1000);
+      }
+
+      const pranks = [
+        `Password: AKUNNYA_GAK_BISA_DIHACK_TAPI_BISA_DIJODOHKAN 😁`,
+        `Password: COBA_LAGI_TAPI_DI_DUNIA_MIMPI 😴`,
+        `Password: NGAREP_YA_NDAK_DOSA 😎`,
+        `Password: NASIBMU_SUDAH_TERHACK_OLEH_REALITA 🤖`
+      ];
+
+      const joke = pranks[Math.floor(Math.random() * pranks.length)];
+      consoleEl.innerHTML += joke + "\n";
+      consoleEl.innerHTML += "\nPRANK! Kamu ketipu. Tapi kamu masih punya satu hal yang tak bisa di-hack: HARAPAN HIDUP ❤️";
+      consoleEl.scrollTop = consoleEl.scrollHeight;
+    }
+  </script></body>
+</html>
